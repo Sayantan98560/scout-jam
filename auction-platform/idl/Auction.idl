@@ -1,0 +1,102 @@
+// Auction.idl - Interface Definition Language for Online Auction Platform
+
+module AuctionSystem {
+    
+    // Exception definitions
+    exception AuctionNotFoundException {
+        string message;
+    };
+    
+    exception InvalidBidException {
+        string message;
+    };
+    
+    exception AuctionExpiredException {
+        string message;
+    };
+    
+    // Data structures
+    struct Bid {
+        long bidId;
+        long auctionId;
+        string bidderName;
+        double amount;
+        string timestamp;
+    };
+    
+    struct Auction {
+        long auctionId;
+        string itemName;
+        string description;
+        string sellerName;
+        double startingPrice;
+        double currentHighestBid;
+        string highestBidder;
+        double bidIncrement;
+        string startTime;
+        string endTime;
+        boolean isActive;
+        long totalBids;
+    };
+    
+    typedef sequence<Auction> AuctionList;
+    typedef sequence<Bid> BidList;
+    
+    // User management structure
+    struct User {
+        string username;
+        string email;
+        boolean isSeller;
+        long totalBids;
+        long totalAuctions;
+    };
+    
+    // Auction Service Interface
+    interface AuctionService {
+        
+        // Auction management operations
+        long createAuction(in string itemName, in string description, 
+                          in string sellerName, in double startingPrice, 
+                          in double bidIncrement, in long durationMinutes);
+        
+        AuctionList getAllActiveAuctions();
+        
+        Auction getAuction(in long auctionId) raises(AuctionNotFoundException);
+        
+        boolean closeAuction(in long auctionId) raises(AuctionNotFoundException);
+        
+        // Bidding operations
+        long placeBid(in long auctionId, in string bidderName, in double bidAmount) 
+                     raises(AuctionNotFoundException, InvalidBidException, AuctionExpiredException);
+        
+        BidList getBidsForAuction(in long auctionId) raises(AuctionNotFoundException);
+        
+        Bid getHighestBid(in long auctionId) raises(AuctionNotFoundException);
+        
+        // User operations
+        boolean registerUser(in string username, in string email, in boolean isSeller);
+        
+        User getUserInfo(in string username);
+        
+        AuctionList getAuctionsByUser(in string username);
+        
+        BidList getBidsByUser(in string username);
+        
+        // System operations
+        string getServerStatus();
+        
+        void shutdown();
+    };
+    
+    // Callback interface for notifications (optional feature)
+    interface AuctionCallback {
+        void onNewBid(in long auctionId, in Bid newBid);
+        void onAuctionEnd(in long auctionId, in Auction finalAuction);
+    };
+    
+    // Extended service with callback support
+    interface AuctionServiceWithCallbacks : AuctionService {
+        void registerCallback(in AuctionCallback callback, in long auctionId);
+        void unregisterCallback(in AuctionCallback callback, in long auctionId);
+    };
+};

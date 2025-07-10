@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Auction Platform</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🔨 Online Auction Platform</h1>
+            <nav>
+                <button onclick="showSection('auctions')" class="nav-btn active">View Auctions</button>
+                <button onclick="showSection('create')" class="nav-btn">Create Auction</button>
+                <button onclick="showSection('register')" class="nav-btn">Register User</button>
+                <button onclick="showSection('status')" class="nav-btn">Server Status</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Auctions Section -->
+        <section id="auctions-section" class="section active">
+            <h2>Active Auctions</h2>
+            <button onclick="loadAuctions()" class="refresh-btn">🔄 Refresh</button>
+            
+            <div id="auctions-list" class="auctions-grid">
+                <!-- Auctions will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Create Auction Section -->
+        <section id="create-section" class="section">
+            <h2>Create New Auction</h2>
+            <form id="create-auction-form" class="form">
+                <div class="form-group">
+                    <label for="itemName">Item Name:</label>
+                    <input type="text" id="itemName" name="itemName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sellerName">Seller Name:</label>
+                    <input type="text" id="sellerName" name="sellerName" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="startingPrice">Starting Price ($):</label>
+                        <input type="number" id="startingPrice" name="startingPrice" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bidIncrement">Bid Increment ($):</label>
+                        <input type="number" id="bidIncrement" name="bidIncrement" step="0.01" min="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="duration">Duration (minutes):</label>
+                    <input type="number" id="duration" name="duration" min="1" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">Create Auction</button>
+            </form>
+        </section>
+
+        <!-- Register User Section -->
+        <section id="register-section" class="section">
+            <h2>Register New User</h2>
+            <form id="register-user-form" class="form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="isSeller" name="isSeller">
+                        Register as Seller
+                    </label>
+                </div>
+                
+                <button type="submit" class="submit-btn">Register User</button>
+            </form>
+        </section>
+
+        <!-- Server Status Section -->
+        <section id="status-section" class="section">
+            <h2>Server Status</h2>
+            <button onclick="loadServerStatus()" class="refresh-btn">🔄 Refresh Status</button>
+            <div id="server-status" class="status-display">
+                <!-- Status will be loaded here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Bid Modal -->
+    <div id="bid-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeBidModal()">&times;</span>
+            <h3>Place a Bid</h3>
+            
+            <div id="auction-details">
+                <!-- Auction details will be displayed here -->
+            </div>
+            
+            <form id="bid-form" class="form">
+                <input type="hidden" id="bid-auction-id" name="auctionId">
+                
+                <div class="form-group">
+                    <label for="bidderName">Your Name:</label>
+                    <input type="text" id="bidderName" name="bidderName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bidAmount">Bid Amount ($):</label>
+                    <input type="number" id="bidAmount" name="bidAmount" step="0.01" min="0" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">Place Bid</button>
+            </form>
+            
+            <div id="bid-history">
+                <h4>Bid History</h4>
+                <div id="bids-list">
+                    <!-- Bid history will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
